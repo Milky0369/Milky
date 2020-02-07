@@ -12,12 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 @Entity
-@Table(name = "USER")
-public class User {
+@Table(name = "VACATION")
+public class Vacation {
 	@Id
 	private int empNum;
-	private String userId;
-	private String userPwd;
+	private float vacation;
 	private Date regDate;
 	private Date uptDate;
 }
