@@ -1,0 +1,1 @@
+INSERT INTO USER(USER_ID, USER_PWD, REG_DATE) VALUES('milky', 'test', NOW());

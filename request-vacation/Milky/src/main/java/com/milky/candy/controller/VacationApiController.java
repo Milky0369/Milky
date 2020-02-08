@@ -5,16 +5,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.milky.candy.domain.request.ReqVacationDto;
+import com.milky.candy.domain.response.ResVacationDto;
+import com.milky.candy.repository.UserDbRepository;
+import com.milky.candy.service.VacationService;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class VacationApiController {
 
+	final VacationService vacationService;
+	
     @RequestMapping(value="/vacation", method=RequestMethod.POST, produces="application/json;charset=UTF-8")
-    public String requestVacation(@RequestBody String param) {
+    public ResVacationDto requestVacation(@RequestBody ReqVacationDto param) {
     	
-    	return null;
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	ResVacationDto res = new ResVacationDto();
+    	
+    	return res;
     }
     
 }

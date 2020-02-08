@@ -1,13 +1,51 @@
 package com.milky.candy;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+@EntityScan
+@ComponentScan
+@EnableScheduling
+@EnableBatchProcessing
+@EnableJpaRepositories
 @SpringBootApplication
 public class MilkyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MilkyApplication.class, args);
 	}
+	
+    @Bean(name = "initVacationJobLauncher")
+    public JobLauncher initVacationJobLauncher(JobRepository jobRepository) {
+        SimpleJobLauncher launcher = new SimpleJobLauncher();
+        launcher.setJobRepository(jobRepository);
+        SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
+        simpleAsyncTaskExecutor.setThreadNamePrefix("init-vacation-task");
+        launcher.setTaskExecutor(simpleAsyncTaskExecutor);
+        return launcher;
+    }
+    
+    @Bean(name = "initVacationBatchThreadPool")
+    public TaskExecutor initVacationBatchThreadPool(
+            @Value("${milky.db.core.task.pool.size}") int coreTaskPoolSize,
+            @Value("${milky.db.max.task.pool.size}") int maxTaskPoolSize) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(coreTaskPoolSize);
+        executor.setMaxPoolSize(maxTaskPoolSize);
+        return executor;
+    }
 
 }
