@@ -1,6 +1,6 @@
 package com.milky.candy.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,7 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 public class Vacation {
 	@Id
 	private int empNum;
-	private float vacation;
-	private Date regDate;
-	private Date uptDate;
+	private double vacation;
+	private LocalDateTime regDate;
+	private LocalDateTime uptDate;
+	
 }

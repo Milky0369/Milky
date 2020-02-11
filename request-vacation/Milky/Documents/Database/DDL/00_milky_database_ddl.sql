@@ -15,10 +15,17 @@ CREATE TABLE VACATION (
 	PRIMARY KEY (EMP_NUM)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='휴가 관리 테이블';
 
-create table authority (
-    username varchar(20),
-    authority_name varchar(20)
-);
+CREATE TABLE VACATION_HISTORY (
+	SEQ         INT(11)       NOT NULL 				 AUTO_INCREMENT COMMENT '자동 증가 값',
+	EMP_NUM 	INT(11)       NOT NULL 				                COMMENT '사번 (ref.USER.EMP_NUM)',
+	TIME_TYPE   VARCHAR(20)         	DEFAULT NULL                COMMENT '휴가 구분',
+	START_DATE	DATETIME                DEFAULT NULL                COMMENT '휴가 시작일',
+	END_DATE	DATETIME                DEFAULT NULL                COMMENT '휴가 종료일',
+	CANCEL_FLAG VARCHAR(1)           	DEFAULT 'N'                 COMMENT '휴가 취소 구분',
+	REG_DATE	DATETIME      NOT NULL  DEFAULT NOW()               COMMENT '데이터 등록 시간',
+	UPT_DATE	DATETIME                DEFAULT NULL                COMMENT '데이터 갱신 시간',
+	PRIMARY KEY (SEQ)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='휴가 히스토리 테이블';
 
 CREATE TABLE BAT_JOB_INSTANCE  (
 	JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY COMMENT 'job instance 아이디',
