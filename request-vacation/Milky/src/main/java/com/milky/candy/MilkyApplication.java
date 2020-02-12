@@ -15,12 +15,14 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
 @EntityScan
 @ComponentScan
 @EnableScheduling
 @EnableBatchProcessing
 @EnableJpaRepositories
+@EnableAuthorizationServer
 @SpringBootApplication
 public class MilkyApplication {
 
@@ -47,5 +49,18 @@ public class MilkyApplication {
         executor.setMaxPoolSize(maxTaskPoolSize);
         return executor;
     }
+
+//	@Override
+//	public void configure(HttpSecurity http) throws Exception {
+//		http.headers().frameOptions().disable();
+//		http.authorizeRequests()
+//			.anyRequest().permitAll()
+//			.antMatchers("/authorization-code").access("#oauth2.hasScope('read')");
+//	}
+//	
+//	@Bean
+//	public TokenStore JdbcTokenStore(DataSource dataSource) {
+//		return new JdbcTokenStore(dataSource);
+//	}
 
 }

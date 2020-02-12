@@ -9,4 +9,5 @@ public interface UserService {
 	User loginUser(ReqLoginDto user);
 	User readUser(String username);
 	List<User> selectUser();
+	User save(User user);
 }

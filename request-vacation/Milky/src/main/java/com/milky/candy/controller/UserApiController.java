@@ -23,9 +23,14 @@ public class UserApiController {
 	
 	final UserService userService;
 	
+    @RequestMapping(value="/user", method = RequestMethod.POST)
+    public User create(@RequestBody User user){
+        return userService.save(user);
+    }
+    
 	// 로그인 세션처리 필요. -> Oauth2 토큰발급
     @RequestMapping(value="/login", method=RequestMethod.POST, produces="application/json;charset=UTF-8")
-    public Map<String, Object> requestLogin(@RequestBody ReqLoginDto param) { // user 객체로 RequestBody 매핑
+    public Map<String, Object> requestLogin(@RequestBody ReqLoginDto param) {
     	
     	Map<String, Object> resMap = new HashMap<String, Object>();
     	
