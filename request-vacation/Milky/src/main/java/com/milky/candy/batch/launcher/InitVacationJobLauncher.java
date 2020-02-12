@@ -14,13 +14,13 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class VacationJobLauncher {
+public class InitVacationJobLauncher {
 	
-    private final JobLauncher initVacationJobLauncher;
+    private final JobLauncher vacationJobLauncher;
     private final Job initVacationJob;
 
     public JobExecution run(JobParameters jobParameters) throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-        return initVacationJobLauncher.run(initVacationJob, jobParameters);
+        return vacationJobLauncher.run(initVacationJob, jobParameters);
     }
     
 }

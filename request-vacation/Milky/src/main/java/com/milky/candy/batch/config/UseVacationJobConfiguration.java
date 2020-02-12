@@ -24,9 +24,9 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import com.milky.candy.batch.listener.VacationJobListener;
-import com.milky.candy.batch.processor.InitVacationProcessor;
-import com.milky.candy.batch.writer.InitVacationItemWriter;
-import com.milky.candy.domain.Vacation;
+import com.milky.candy.batch.processor.UseVacationProcessor;
+import com.milky.candy.batch.writer.UseVacationItemWriter;
+import com.milky.candy.domain.VacationHistory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Configuration
 @EnableBatchProcessing
-public class InitVacationJobConfiguration {
-	private static final String JOB_NAME = "initVacationJob";
+public class UseVacationJobConfiguration {
+	private static final String JOB_NAME = "useVacationJob";
     
     private final DataSource dataSource;
     private final JobBuilderFactory jobBuilderFactory;
@@ -44,71 +44,76 @@ public class InitVacationJobConfiguration {
     private final TaskExecutor vacationBatchThreadPool;
     
     @Bean(name= JOB_NAME)
-    public Job initVacationJob(Step exportInitVacationStep,
-                               VacationJobListener vacationJobListener) {
+    public Job useVacationJob(Step exportUseVacationStep,
+                              VacationJobListener vacationJobListener) {
         return jobBuilderFactory.get(JOB_NAME)
                 .incrementer(new RunIdIncrementer())
-                .start(exportInitVacationStep)
+                .start(exportUseVacationStep)
                 .listener(vacationJobListener)
                 .build();
     }
     
-    @Bean(name="exportInitVacationStep")
-    public Step exportInitVacationStep(
+    @Bean(name="exportUseVacationStep")
+    public Step exportUseVacationStep(
             @Value("${milky.chunk.size}") int chunkSize,
             @Value("${milky.throttle.limit}") int throttleLimit,
-            InitVacationProcessor initVacationProcessor,
-            InitVacationItemWriter initVacationItemWriter) throws Exception {
+            UseVacationProcessor useVacationProcessor,
+            UseVacationItemWriter useVacationItemWriter) throws Exception {
 
-        return stepBuilderFactory.get("exportInitVacationStep")
-                .<Vacation, Vacation>chunk(chunkSize)
-                .reader(initVacationItemReader(null, null))
-                .processor(initVacationProcessor)
-                .writer(initVacationItemWriter)
+        return stepBuilderFactory.get("exportUseVacationStep")
+                .<VacationHistory, VacationHistory>chunk(chunkSize)
+                .reader(useVacationItemReader(null, null))
+                .processor(useVacationProcessor)
+                .writer(useVacationItemWriter)
                 .throttleLimit(throttleLimit)
                 .taskExecutor(vacationBatchThreadPool)
                 .build();
     }
-
-    @Bean(name = "initVacationItemReader")
+    
+    @Bean(name = "useVacationItemReader")
     @StepScope
-    public JdbcPagingItemReader<Vacation> initVacationItemReader(
+    public JdbcPagingItemReader<VacationHistory> useVacationItemReader(
     		@Value("${milky.page.size}") Integer pageSize,
     		@Value("${milky.fetch.size}") Integer fetchSize
     		) throws Exception {
         Map<String, Object> parameterValues = new HashMap<>();
 
-        return new JdbcPagingItemReaderBuilder<Vacation>()
+        return new JdbcPagingItemReaderBuilder<VacationHistory>()
                 .pageSize(pageSize)
                 .fetchSize(fetchSize)
                 .dataSource(dataSource)
-                .rowMapper(new BeanPropertyRowMapper<>(Vacation.class))
-                .queryProvider(initVacationItemCreateQueryProvider())
+                .rowMapper(new BeanPropertyRowMapper<>(VacationHistory.class))
+                .queryProvider(useVacationItemCreateQueryProvider())
                 .parameterValues(parameterValues)
-                .name("initVacationItemReader")
+                .name("useVacationItemReader")
                 .build();
     }
     
     @Bean
     @StepScope
-    public PagingQueryProvider initVacationItemCreateQueryProvider() throws Exception {
+    public PagingQueryProvider useVacationItemCreateQueryProvider() throws Exception {
         SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
         queryProvider.setDataSource(dataSource);
         queryProvider.setSelectClause(
         		"SELECT " +
+        		"SEQ AS seq," +
                 "EMP_NUM AS empNum, " +
-        		"VACATION AS vacation, " +
+        		"TIME_TYPE AS timeType, " +
+        		"START_DATE AS startDate, " +
+        		"END_DATE AS endDate, " +
+        		"USE_FLAG AS useFlag, " +
+        		"CANCEL_FLAG AS cancelFlag, " +
                 "REG_DATE AS regDate, " +
                 "UPT_DATE AS uptDate ");
-        queryProvider.setFromClause("FROM VACATION");
-
+        queryProvider.setFromClause("FROM VACATION_HISTORY");
+        queryProvider.setWhereClause("WHERE CANCEL_FLAG = 'N'"
+        							  + "AND USE_FLAG = 'N'"
+        							  + "AND START_DATE = DATE_FORMAT(NOW(),'%Y%m%d')");
         Map<String, Order> sortKeys = new HashMap<>();
         
-        sortKeys.put("uptDate", Order.ASCENDING);
-        sortKeys.put("empNum", Order.ASCENDING);
+        sortKeys.put("seq", Order.ASCENDING);
 
         queryProvider.setSortKeys(sortKeys);
         return queryProvider.getObject();
     }
-    
 }

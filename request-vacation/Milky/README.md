@@ -19,7 +19,7 @@ JSON SAMPLE
 --------------
 1. 로그인
 ```sh
-URL            : https://XXX.XXX.XXX.XXX:XXXX/milky/login
+URL            : http://XXX.XXX.XXX.XXX:XXXX/milky/login
 Content-Type   : application/json
 Accept-Charset : UTF-8
 HTTP protocal  : POST
@@ -32,7 +32,7 @@ json parameter :
 ```
 2. 연차 신청
 ```sh
-URL            : https://XXX.XXX.XXX.XXX:XXXX/milky/vacation
+URL            : http://XXX.XXX.XXX.XXX:XXXX/milky/vacation
 Content-Type   : application/json
 Accept-Charset : UTF-8
 HTTP protocal  : POST
@@ -48,7 +48,7 @@ json parameter :
 ```
 3. 반차 신청
 ```sh
-URL            : https://XXX.XXX.XXX.XXX:XXXX/milky/vacation
+URL            : http://XXX.XXX.XXX.XXX:XXXX/milky/vacation
 Content-Type   : application/json
 Accept-Charset : UTF-8
 HTTP protocal  : POST
@@ -64,7 +64,7 @@ json parameter :
 ```
 4. 반반차 신청
 ```sh
-URL            : https://XXX.XXX.XXX.XXX:XXXX/milky/vacation
+URL            : http://XXX.XXX.XXX.XXX:XXXX/milky/vacation
 Content-Type   : application/json
 Accept-Charset : UTF-8
 HTTP protocal  : POST
@@ -80,10 +80,10 @@ json parameter :
 ```
 5. 연차 취소
 ```sh
-URL            : https://XXX.XXX.XXX.XXX:XXXX/milky/login
+URL            : http://XXX.XXX.XXX.XXX:XXXX/milky/vacation
 Content-Type   : application/json
 Accept-Charset : UTF-8
-HTTP protocal  : POST
+HTTP protocal  : DELETE
 
 json parameter :
 	{

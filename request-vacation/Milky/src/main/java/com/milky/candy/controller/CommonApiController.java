@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +17,7 @@ public class CommonApiController {
 	
 	@RequestMapping(value="/ping", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public Map<String, Object> ping() {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("time", new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -30,9 +30,6 @@ public class CommonApiController {
 			log.error(String.format("[ping] [resultMsg: %s]", map.get("msg")));
 		}
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Access-Control-Allow-Origin", "*");
-		
 		return map;
 	}
 	

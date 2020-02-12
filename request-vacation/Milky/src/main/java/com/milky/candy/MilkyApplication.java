@@ -28,18 +28,18 @@ public class MilkyApplication {
 		SpringApplication.run(MilkyApplication.class, args);
 	}
 	
-    @Bean(name = "initVacationJobLauncher")
-    public JobLauncher initVacationJobLauncher(JobRepository jobRepository) {
+    @Bean(name = "vacationJobLauncher")
+    public JobLauncher vacationJobLauncher(JobRepository jobRepository) {
         SimpleJobLauncher launcher = new SimpleJobLauncher();
         launcher.setJobRepository(jobRepository);
         SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
-        simpleAsyncTaskExecutor.setThreadNamePrefix("init-vacation-task");
+        simpleAsyncTaskExecutor.setThreadNamePrefix("vacation-task");
         launcher.setTaskExecutor(simpleAsyncTaskExecutor);
         return launcher;
     }
     
-    @Bean(name = "initVacationBatchThreadPool")
-    public TaskExecutor initVacationBatchThreadPool(
+    @Bean(name = "vacationBatchThreadPool")
+    public TaskExecutor vacationBatchThreadPool(
             @Value("${milky.db.core.task.pool.size}") int coreTaskPoolSize,
             @Value("${milky.db.max.task.pool.size}") int maxTaskPoolSize) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

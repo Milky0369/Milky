@@ -18,8 +18,9 @@ public class VacationHistory {
 	private int seq;
 	private int empNum;
 	private String timeType;
-	private LocalDateTime startDate;
-	private LocalDateTime endDate;
+	private String startDate;
+	private String endDate;
+	private String useFlag;
 	private String cancelFlag;
 	private LocalDateTime regDate;
 	private LocalDateTime uptDate;

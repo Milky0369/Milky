@@ -1,1 +1,5 @@
-INSERT INTO USER(USER_ID, USER_PWD, REG_DATE) VALUES('milky', 'test', NOW());
+-- 사용자 데이터 생성
+INSERT INTO USER(USER_ID, USER_PWD, REG_DATE) VALUES ('milky', 'test', NOW());
+
+-- 사용자 연차일수 생성
+INSERT INTO VACATION(EMP_NUM, VACATION, REG_DATE) VALUES ('1', '15.0', NOW());

@@ -12,7 +12,7 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.milky.candy.batch.launcher.InitVacationJobLauncher;
+import com.milky.candy.batch.launcher.UseVacationJobLauncher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,26 +20,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class InitVacationScheduler {
+public class UseVacationScheduler {
+
+	private final UseVacationJobLauncher useVacationJobLauncher;
 	
-	private final InitVacationJobLauncher initVacationJobLauncher;
-	
-	@Scheduled(cron = "0 10 0 1 1 ?")
+	@Scheduled(cron = "0 0 0/6 * * ?")
 	public void scheduled() throws JobParametersInvalidException, JobExecutionAlreadyRunningException,
 			JobRestartException, JobInstanceAlreadyCompleteException {
 		
         if (log.isDebugEnabled()) {
-            log.debug("schedule check. InitVacationScheduler.");
+            log.debug("schedule check. UseVacationScheduler.");
         }
         
         try {
-        	initVacationJobLauncher.run(new JobParametersBuilder()
+        	useVacationJobLauncher.run(new JobParametersBuilder()
 					.addString("currentTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
-					.addString("jobName", "initVacationJob")
+					.addString("jobName", "useVacationJob")
 					.toJobParameters());
 		} catch (Exception e) {
-			log.error("initVacationScheduler Exception : {}", e);
+			log.error("useVacationScheduler Exception : {}", e);
 		}
 	}
-
 }

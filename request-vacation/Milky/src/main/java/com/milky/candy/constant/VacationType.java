@@ -33,15 +33,4 @@ public enum VacationType {
 		}
 		return null;
 	}
-	
-//	public static void main(String[] args) {
-//		String type = "DAY_OFF";
-//		
-//		if(VacationType.DAY_OFF.getVacationType().equals(type)) {
-//			System.out.println("test");
-//		}
-//		
-//		System.out.println(VacationType.DAY_OFF.getVacationDay());
-//		System.out.println(VacationType.DAY_OFF.getVacationType());
-//	}
 }

@@ -9,7 +9,7 @@ CREATE TABLE USER (
 
 CREATE TABLE VACATION (
 	EMP_NUM 	INT(11)       NOT NULL 				                COMMENT '사번 (ref.USER.EMP_NUM)',
-	VACATION    DECIMAL(2,2)  NOT NULL 	DEFAULT '0.0'               COMMENT '휴가일수',
+	VACATION    DECIMAL(4,2)  NOT NULL 	DEFAULT '0.0'               COMMENT '휴가일수',
 	REG_DATE	DATETIME      NOT NULL  DEFAULT NOW()               COMMENT '데이터 등록 시간',
 	UPT_DATE	DATETIME                DEFAULT NULL                COMMENT '데이터 갱신 시간',
 	PRIMARY KEY (EMP_NUM)
@@ -19,8 +19,9 @@ CREATE TABLE VACATION_HISTORY (
 	SEQ         INT(11)       NOT NULL 				 AUTO_INCREMENT COMMENT '자동 증가 값',
 	EMP_NUM 	INT(11)       NOT NULL 				                COMMENT '사번 (ref.USER.EMP_NUM)',
 	TIME_TYPE   VARCHAR(20)         	DEFAULT NULL                COMMENT '휴가 구분',
-	START_DATE	DATETIME                DEFAULT NULL                COMMENT '휴가 시작일',
-	END_DATE	DATETIME                DEFAULT NULL                COMMENT '휴가 종료일',
+	START_DATE	VARCHAR(10)             DEFAULT NULL                COMMENT '휴가 시작일',
+	END_DATE	VARCHAR(10)             DEFAULT NULL                COMMENT '휴가 종료일',
+	USE_FLAG    VARCHAR(1)           	DEFAULT 'N'                 COMMENT '휴가 사용 구분',
 	CANCEL_FLAG VARCHAR(1)           	DEFAULT 'N'                 COMMENT '휴가 취소 구분',
 	REG_DATE	DATETIME      NOT NULL  DEFAULT NOW()               COMMENT '데이터 등록 시간',
 	UPT_DATE	DATETIME                DEFAULT NULL                COMMENT '데이터 갱신 시간',
