@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import com.milky.candy.constant.VacationType;
 import com.milky.candy.domain.User;
 import com.milky.candy.domain.Vacation;
 import com.milky.candy.domain.VacationHistory;
@@ -31,8 +32,8 @@ public class VacationServiceImpl implements VacationService {
 	public ResVacationDto useVacation(ReqVacationDto request) {
 		ResVacationDto res = new ResVacationDto();
 		
-		String startDate = null;
-		String endDate = null;
+		LocalDateTime startDate = null;
+		LocalDateTime endDate = null;
 		
 		User user = new User();
 		Vacation selectVacation = new Vacation();
@@ -41,8 +42,8 @@ public class VacationServiceImpl implements VacationService {
 		double useDay = 0;
 		
 		try {
-			startDate = calcDate(request.getStartDate());
-			endDate = calcDate(request.getEndDate());
+			startDate = calcDate(request.getStartDate(), request.getVacationType());
+			endDate = calcDate(request.getEndDate(), request.getVacationType());
 			
 			user = userDbRepository.findByUserId(request.getUserId());
 			selectVacation = vacationDbRepository.findByEmpNum(user.getEmpNum());
@@ -55,12 +56,14 @@ public class VacationServiceImpl implements VacationService {
 			res.setResultCode("500");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Server Error");
 			
 			return res;
 		}
 		
 		if(user != null && checkVacation == null && useDay > 0 && 
-							(selectVacation.getVacation() > 0 || selectVacation.getVacation() - useDay > 0)) {
+			(selectVacation.getVacation() > 0 || selectVacation.getVacation() - useDay > 0)
+			&& startDate.isAfter(LocalDateTime.now())) {
 			Vacation updateVacation = new Vacation();
 			
 			updateVacation.setEmpNum(user.getEmpNum());
@@ -85,30 +88,35 @@ public class VacationServiceImpl implements VacationService {
 			res.setResultCode("200");
 			res.setUseVacation(useDay);
 			res.setRemainingVacation(updateVacation.getVacation());
-		} else if(useDay == 0) {
+			res.setMsg("Request Vacation success.");
+		} else if(useDay == 0 || startDate.isBefore(LocalDateTime.now())) {
 			log.error("Invalid date. startDate : {}, endDate : {}, vacationType : {}", startDate, endDate, request.getVacationType());
 			
 			res.setResultCode("409");
-			res.setUseVacation(0);
+			res.setUseVacation(useDay);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Invalid Date.");
 		} else if(checkVacation != null) {
 			log.error("Already regist vacation. Vacation : {}", checkVacation);
 			
 			res.setResultCode("409");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Already regist vacation.");
 		} else if(selectVacation.getVacation() <= 0 || selectVacation.getVacation() - useDay <= 0) {
 			log.error("Can not use Vacation. Vacation : {}", selectVacation);
 			
 			res.setResultCode("409");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Can not use Vacation.");
 		} else {
 			log.error("unknown user. userId : {}", request.getUserId());
 			
 			res.setResultCode("404");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("unknown user.");
 		}
 		
 		return res;
@@ -118,8 +126,8 @@ public class VacationServiceImpl implements VacationService {
 	public ResVacationDto cancelVacation(ReqVacationDto request) {
 		ResVacationDto res = new ResVacationDto();
 		
-		String startDate = null;
-		String endDate = null;
+		LocalDateTime startDate = null;
+		LocalDateTime endDate = null;
 		
 		User user = new User();
 		Vacation selectVacation = new Vacation();
@@ -128,8 +136,8 @@ public class VacationServiceImpl implements VacationService {
 		double useDay = 0;
 		
 		try {
-			startDate = calcDate(request.getStartDate());
-			endDate = calcDate(request.getEndDate());
+			startDate = calcDate(request.getStartDate(), request.getVacationType());
+			endDate = calcDate(request.getEndDate(), request.getVacationType());
 
 			user = userDbRepository.findByUserId(request.getUserId());
 			selectVacation = vacationDbRepository.findByEmpNum(user.getEmpNum());
@@ -142,6 +150,7 @@ public class VacationServiceImpl implements VacationService {
 			res.setResultCode("500");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Server Error");
 			
 			return res;
 		}
@@ -163,44 +172,53 @@ public class VacationServiceImpl implements VacationService {
 			res.setResultCode("200");
 			res.setUseVacation(useDay);
 			res.setRemainingVacation(updateVacation.getVacation());
+			res.setMsg("Vacation cancel success.");
 		} else if(useDay == 0) {
 			log.error("Invalid date. startDate : {}, endDate : {}", startDate, endDate);
 			
-			res.setResultCode("405");
-			res.setUseVacation(0);
+			res.setResultCode("409");
+			res.setUseVacation(useDay);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Invalid date.");
 		} else if(checkVacation != null) {
 			log.error("Vacation Data not found. Vacation : {}", checkVacation);
 			
-			res.setResultCode("401");
+			res.setResultCode("404");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("Vacation Data not found.");
 		} else {
 			log.error("unknown user. userId : {}", request.getUserId());
 			
-			res.setResultCode("401");
+			res.setResultCode("404");
 			res.setUseVacation(0);
 			res.setRemainingVacation(selectVacation.getVacation());
+			res.setMsg("unknown user.");
 		}
 		
 		return res;
 	}
 	
-	public String calcDate(LocalDateTime param) {
+	public LocalDateTime calcDate(LocalDateTime param, String vacationType) {
+		LocalDateTime resultDateTime = null;
 		
 		int year = param.getYear();
 		int month = param.getMonthValue();
 		int day = param.getDayOfMonth();
 		
-		String result = null;
-		
-		if(month < 10) {
-			result = "" + year + "0" + month + day;
-		} else {
-			result = "" + year + month + day; 
+		if(VacationType.DAY_OFF.getVacationType().equals(vacationType)) {
+			resultDateTime = LocalDateTime.of(year, month, day, 9, 0, 0, 0);
+		} else if(VacationType.HALF_DAY_OFF_AM.getVacationType().equals(vacationType)) {
+			resultDateTime = LocalDateTime.of(year, month, day, 9, 0, 0, 0);
+		} else if(VacationType.HALF_DAY_OFF_PM.getVacationType().equals(vacationType)) {
+			resultDateTime = LocalDateTime.of(year, month, day, 14, 0, 0, 0);
+		} else if(VacationType.HALF_HALF_DAY_OFF_AM.getVacationType().equals(vacationType)) {
+			resultDateTime = LocalDateTime.of(year, month, day, 9, 0, 0, 0);
+		} else if(VacationType.HALF_HALF_DAY_OFF_PM.getVacationType().equals(vacationType)) {
+			resultDateTime = LocalDateTime.of(year, month, day, 16, 0, 0, 0);
 		}
 		
-		return result;
+		return resultDateTime;
 	}
 	
 }

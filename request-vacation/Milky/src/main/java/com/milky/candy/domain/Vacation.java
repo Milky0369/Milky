@@ -19,5 +19,4 @@ public class Vacation {
 	private double vacation;
 	private LocalDateTime regDate;
 	private LocalDateTime uptDate;
-	
 }

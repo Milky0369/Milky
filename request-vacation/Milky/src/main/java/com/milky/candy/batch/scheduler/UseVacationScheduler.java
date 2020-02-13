@@ -24,7 +24,7 @@ public class UseVacationScheduler {
 
 	private final UseVacationJobLauncher useVacationJobLauncher;
 	
-	@Scheduled(cron = "0 0 0/6 * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void scheduled() throws JobParametersInvalidException, JobExecutionAlreadyRunningException,
 			JobRestartException, JobInstanceAlreadyCompleteException {
 		

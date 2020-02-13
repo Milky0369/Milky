@@ -108,7 +108,7 @@ public class UseVacationJobConfiguration {
         queryProvider.setFromClause("FROM VACATION_HISTORY");
         queryProvider.setWhereClause("WHERE CANCEL_FLAG = 'N'"
         							  + "AND USE_FLAG = 'N'"
-        							  + "AND START_DATE = DATE_FORMAT(NOW(),'%Y%m%d')");
+        							  + "AND START_DATE < NOW()");
         Map<String, Order> sortKeys = new HashMap<>();
         
         sortKeys.put("seq", Order.ASCENDING);

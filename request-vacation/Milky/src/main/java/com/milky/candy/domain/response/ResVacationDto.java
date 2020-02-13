@@ -9,6 +9,6 @@ public class ResVacationDto {
 	private double useVacation;
 	private double remainingVacation;
 	
-	// ResultCode enum 객체화 -> HTTP response status code format
 	private String resultCode;
+	private String msg;
 }

@@ -18,10 +18,10 @@ public class VacationHistory {
 	private int seq;
 	private int empNum;
 	private String timeType;
-	private String startDate;
-	private String endDate;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private String useFlag;
 	private String cancelFlag;
-	private LocalDateTime regDate;
+	private LocalDateTime regDate = LocalDateTime.now();
 	private LocalDateTime uptDate;
 }
