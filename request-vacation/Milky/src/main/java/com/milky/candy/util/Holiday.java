@@ -11,11 +11,29 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.web.client.RestTemplate;
 
 import com.ibm.icu.util.ChineseCalendar;
 import com.milky.candy.constant.VacationType;
+import com.milky.candy.domain.request.ReqVacationDto;
 
 public class Holiday {
+	
+	public static void main(String[] args) {
+    	RestTemplate tmp = new RestTemplate();
+    	
+    	String url = "http://192.168.0.4:18090/milky/vacation";
+    	
+    	ReqVacationDto reqVacation = new ReqVacationDto();
+    	reqVacation.setUserId("milky");
+    	reqVacation.setVacationType("DAY_OFF");
+    	reqVacation.setStartDate(LocalDateTime.now());
+    	reqVacation.setEndDate(LocalDateTime.of(2020, 3, 4, 0, 0, 0, 0));
+    	reqVacation.setComment("test");
+    	
+    	String result =  tmp.postForObject(url, reqVacation, String.class);
+    	System.out.println(result);
+	}
 	
 	public static double calcVacation(LocalDateTime startDate, LocalDateTime endDate, String type) {
 		

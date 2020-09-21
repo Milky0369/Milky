@@ -27,4 +27,5 @@ public interface VacationHistoryDbRepository extends JpaRepository<VacationHisto
 			+ "      AND END_DATE = :endDate ", nativeQuery=true)
 	VacationHistory selectHistory(@Param("empNum") int empNum, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+	VacationHistory findByEmpNumAndCancelFlagAndStartDateAndEndDate(@Param("empNum") int empNum, @Param("cancelFlag") String cancelFlag, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

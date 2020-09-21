@@ -47,8 +47,12 @@ public class VacationServiceImpl implements VacationService {
 			
 			user = userDbRepository.findByUserId(request.getUserId());
 			selectVacation = vacationDbRepository.findByEmpNum(user.getEmpNum());
-			checkVacation =  vacationHistoryDbRepository.selectHistory(user.getEmpNum(), startDate, endDate);
-	
+			//checkVacation =  vacationHistoryDbRepository.selectHistory(user.getEmpNum(), startDate, endDate);
+			checkVacation =  vacationHistoryDbRepository.findByEmpNumAndCancelFlagAndStartDateAndEndDate(user.getEmpNum(), "N", startDate, endDate);
+			
+			log.info("checkVacation: {}", checkVacation);
+			System.out.println("checkVacation : " + checkVacation);
+			
 			useDay = Holiday.calcVacation(request.getStartDate(), request.getEndDate(), request.getVacationType());
 		} catch (Exception e) {
 			log.error("Exception : {}", e);
